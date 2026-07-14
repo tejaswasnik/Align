@@ -3,12 +3,16 @@ import taskModel from "../models/task.model.js";
 export async function createTask(req, res) {
   const { task_title, description, dueDate, priority, completed } = req.body;
   const task = await taskModel.create({
-    task_title,
-    description,
-    dueDate,
-    priority,
-    completed,
+    task_title: task_title,
+    description: description,
+    dueDate: dueDate,
+    priority: priority,
+    completed: completed,
   });
+  console.log("BODY:", req.body);
+
+  console.log("task_title:", task_title);
+  console.log("typeof task_title:", typeof task_title);
   res.status(200).json({
     message: "Task created successfully.",
     task,
