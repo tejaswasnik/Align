@@ -19,6 +19,7 @@ const Task = ({ task, onDelete }) => {
           onChange={(e) => {
             handleToggleTaskCompletion(task._id, e.target.checked);
           }}
+          readOnly
           className="mt-1 h-5 w-5 rounded border-gray-300 text-blue-600"
         />
 
