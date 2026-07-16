@@ -3,11 +3,13 @@ import "../styles/pages/Dashboard.scss";
 import { useTask } from "../hooks/useTask";
 import Task from "../components/Task";
 const Dashboard = () => {
-  const { tasks, loading, handleTasks, handleCreateTask, handleDeleteTask } = useTask();
+  const { tasks, loading, handleTasks, handleCreateTask, handleDeleteTask } =
+    useTask();
   const [task_Title, setTaskTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("P1");
   const [dueDate, setDueDate] = useState("");
+  const [filter, setFilter] = useState("all");
   const handleSubmit = async (e) => {
     e.preventDefault();
     await handleCreateTask(task_Title, description, dueDate, priority, false);
@@ -15,6 +17,21 @@ const Dashboard = () => {
   useEffect(() => {
     handleTasks();
   }, []);
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === "all") return true;
+
+    if (filter === "completed") return task.completed;
+
+    if (filter === "pending") return !task.completed;
+
+    if (filter === "p1") return task.priority === "P1";
+
+    if (filter === "p2") return task.priority === "P2";
+
+    if (filter === "p3") return task.priority === "P3";
+
+    return true;
+  });
   if (loading || !tasks) {
     return (
       <main>
@@ -25,6 +42,15 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       {/* Header */}
+      <button onClick={() => setFilter("all")}>All</button>
+
+      <button onClick={() => setFilter("completed")}>Completed</button>
+
+      <button onClick={() => setFilter("pending")}>Pending</button>
+
+      <button onClick={() => setFilter("p1")}>P1</button>
+      <button onClick={() => setFilter("p2")}>P2</button>
+      <button onClick={() => setFilter("p3")}>P3</button>
       <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h1 className="text-4xl font-bold text-gray-800">Dashboard</h1>
@@ -107,7 +133,7 @@ const Dashboard = () => {
         <h2 className="mb-6 text-2xl font-semibold">Today's Tasks</h2>
 
         <div className="space-y-4">
-          {tasks.map((task) => (
+          {filteredTasks.map((task) => (
             <Task key={task._id} task={task} onDelete={handleDeleteTask} />
           ))}
         </div>

@@ -9,10 +9,6 @@ export async function createTask(req, res) {
     priority: priority,
     completed: completed,
   });
-  console.log("BODY:", req.body);
-
-  console.log("task_title:", task_title);
-  console.log("typeof task_title:", typeof task_title);
   res.status(200).json({
     message: "Task created successfully.",
     task,
@@ -21,7 +17,6 @@ export async function createTask(req, res) {
 export async function deleteTask(req, res) {
   const taskId = req.params.id;
   const task = await taskModel.findByIdAndDelete(taskId);
-  console.log(taskId);
   res.status(200).json({
     message: "Task deleted successfully.",
   });
