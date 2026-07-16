@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { taskContext } from "../task.context";
-import { getTasks, createTask } from "../services/task.api";
+import { getTasks, createTask, deleteTask } from "../services/task.api";
 
 export function useTask() {
   const context = useContext(taskContext);
@@ -32,5 +32,11 @@ export function useTask() {
     setLoading(false);
   }
 
-  return { loading, tasks, handleTasks, handleCreateTask };
+  async function handleDeleteTask(taskId) {
+    setLoading(true);
+    await deleteTask(taskId);
+    setTasks(tasks.filter((task) => task._id !== taskId));
+    setLoading(false);
+  }
+  return { loading, tasks, handleTasks, handleCreateTask, handleDeleteTask };
 }

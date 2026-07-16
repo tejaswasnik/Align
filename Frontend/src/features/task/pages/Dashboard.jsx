@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "../styles/pages/Dashboard.scss";
 import { useTask } from "../hooks/useTask";
-import { useNavigate } from "react-router";
+import Task from "../components/Task";
 const Dashboard = () => {
-  const { tasks, loading, handleTasks, handleCreateTask } = useTask();
+  const { tasks, loading, handleTasks, handleCreateTask, handleDeleteTask } = useTask();
   const [task_Title, setTaskTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("");
-  const [dueDate, setDueDate] = useState("P1");
+  const [priority, setPriority] = useState("P1");
+  const [dueDate, setDueDate] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await handleCreateTask(
-      task_Title,
-      description,
-      dueDate,
-      priority,
-      false,
-    );
+    await handleCreateTask(task_Title, description, dueDate, priority, false);
   };
   useEffect(() => {
     handleTasks();
@@ -28,7 +22,6 @@ const Dashboard = () => {
       </main>
     );
   }
-  console.log(tasks);
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       {/* Header */}
@@ -80,7 +73,7 @@ const Dashboard = () => {
               onChange={(e) => {
                 setDescription(e.target.value);
               }}
-            />   F
+            />
             <label htmlFor="priority"> Choose a priority :</label>
             <select
               name="priority"
@@ -115,41 +108,7 @@ const Dashboard = () => {
 
         <div className="space-y-4">
           {tasks.map((task) => (
-            <div
-              key={task._id}
-              className="flex flex-col gap-4 rounded-lg border p-4 md:flex-row md:items-center md:justify-between"
-            >
-              <div className="flex items-center gap-4">
-                <input
-                  type="checkbox"
-                  checked={task.completed}
-                  readOnly
-                  className="h-5 w-5"
-                />
-
-                <div>
-                  <h3
-                    className={`font-semibold ${
-                      task.completed
-                        ? "text-gray-400 line-through"
-                        : "text-gray-800"
-                    }`}
-                  >
-                    {task.task_title}
-                  </h3>
-
-                  <p className="text-sm text-gray-500">{task.description}</p>
-
-                  <p className="text-sm text-gray-500">
-                    Priority: {task.priority}
-                  </p>
-                </div>
-              </div>
-
-              <button className="rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600">
-                Delete
-              </button>
-            </div>
+            <Task key={task._id} task={task} onDelete={handleDeleteTask} />
           ))}
         </div>
       </div>
