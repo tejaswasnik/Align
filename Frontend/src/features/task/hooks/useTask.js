@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { taskContext } from "../task.context";
-import { getTasks, createTask, deleteTask } from "../services/task.api";
+import { getTasks, createTask, deleteTask, updateTask } from "../services/task.api";
 
 export function useTask() {
   const context = useContext(taskContext);
@@ -38,5 +38,31 @@ export function useTask() {
     setTasks(tasks.filter((task) => task._id !== taskId));
     setLoading(false);
   }
-  return { loading, tasks, handleTasks, handleCreateTask, handleDeleteTask };
+  
+  async function handleToggleTaskCompletion(taskId, completed) {
+    setLoading(true);
+    const taskToUpdate = tasks.find((task) => task._id === taskId);
+    if (taskToUpdate) {
+      await updateTask(
+        taskId,
+        taskToUpdate.task_title,
+        taskToUpdate.description,
+        taskToUpdate.dueDate,
+        taskToUpdate.priority,
+        completed,
+      );
+
+      const updatedTask = { ...taskToUpdate, completed };
+      setTasks(tasks.map((task) => (task._id === taskId ? updatedTask : task)));
+    }
+    setLoading(false);
+  }
+  return {
+    loading,
+    tasks,
+    handleTasks,
+    handleCreateTask,
+    handleDeleteTask,
+    handleToggleTaskCompletion,
+  };
 }

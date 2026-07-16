@@ -68,3 +68,12 @@ export const deleteTask = async (id) => {
     throw error;
   }
 };
+
+export const toggleTaskCompletion = async (id, completed) => {
+  try {
+    const response = await api.patch(`/task/update/${id}`, { completed });
+  } catch (error) {
+    console.error("Error toggling task completion:", error);
+    throw error;
+  }
+};

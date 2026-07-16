@@ -19,6 +19,7 @@ export async function deleteTask(req, res) {
   const task = await taskModel.findByIdAndDelete(taskId);
   res.status(200).json({
     message: "Task deleted successfully.",
+    task,
   });
 }
 export async function updateTask(req, res) {
